@@ -5,7 +5,7 @@ module "monitoring" {
   combiner = "OR"
   enabled = true
   notification_channels = [ ]
-  user_labels = "alex label"
+
   conditions = {
     "Firestore Instance - Document Writes" = {
     condition_threshold = {
@@ -20,4 +20,8 @@ module "monitoring" {
    }
   }
  }
+   user_labels = {
+    label = "alex label"
+   }
+   
 }
