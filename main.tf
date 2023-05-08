@@ -17,6 +17,7 @@ module "monitoring" {
       aggreations_per_series_aligner = "ALIGN_MEAN"
       trigger_enabled = true
       trigger_count = 1
-    }
+   }
   }
+ }
 }
