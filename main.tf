@@ -2,6 +2,7 @@ module "monitoring" {
   source = "./modules/monitoring-alert-policy"
   display_name = "Firestore Instance - Document Writes"
   project_id = var.project_id
+  user_labels = {label = "alex"}
   combiner = "OR"
   enabled = true
   notification_channels = [ ]
@@ -20,8 +21,4 @@ module "monitoring" {
    }
   }
  }
-   user_labels = {
-    label = "alex"
-   }
-   
 }
