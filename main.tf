@@ -1,7 +1,7 @@
 module "monitoring" {
   source = "./modules/monitoring-alert-policy"
   display_name = "Firestore Instance - Document Writes"
-  project  = var.project_id
+  project_id = var.project_id
   combiner = "OR"
   enabled = true
   notification_channels = [ ]
