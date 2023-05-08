@@ -1,6 +1,6 @@
 module "monitoring" {
   source = "./modules/monitoring-alert-policy"
-  display_name = "Firestore Instance - Document Writes"
+  display_name = "Firestore Instance - Document Writes TF"
   project_id = var.project_id
   user_labels = {label = "alex"}
   combiner = "OR"
