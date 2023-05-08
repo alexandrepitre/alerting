@@ -21,7 +21,7 @@ module "monitoring" {
   }
  }
    user_labels = {
-    label = "alex label"
+    label = "alex"
    }
    
 }
