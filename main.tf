@@ -9,7 +9,7 @@ module "monitoring" {
 
   conditions = {
     "Firestore Instance - Document Writes" = {
-    condition_threshold = {
+    condition_absence = {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/document/write_count\""
       duration   = "3600s"
       comparison = "COMPARISON_GT"
