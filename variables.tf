@@ -5,3 +5,11 @@ variable "project_id" {
 variable "region" {
   type = string
 }
+
+variable "env" {
+  type = string
+}
+
+variable "env_alert" {
+  type = string
+}

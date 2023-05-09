@@ -1,8 +1,8 @@
 module "monitoring" {
   source = "./modules/monitoring-alert-policy"
-  display_name = "Firestore Instance - Document Writes TF"
+  display_name = "MOBILITY|${var.env_alert}|firestore|document_writes|warn|metric"
   project_id = var.project_id
-  user_labels = {label = "alex"}
+  user_labels = {env = "${var.env}", purpose = "firestore_document_writes"}
   combiner = "OR"
   enabled = true
   notification_channels = [ ]
