@@ -12,6 +12,7 @@ module "monitoring" {
     condition_threshold = {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/document/write_count\""
       duration   = "3600s"
+      comparison = "COMPARISON_GT"
       aggregations_enabled = "true"
       aggregations_alignment_period = "300s"
       aggregations_per_series_aligner = "ALIGN_MEAN"
