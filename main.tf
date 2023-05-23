@@ -1,3 +1,11 @@
+resource "google_monitoring_notification_channel" "basic" {
+  display_name = "Test Notification Channel"
+  type         = "email"
+  labels = {
+    email_address = "alexandre.pitre22l@gmail.com"
+  }
+}
+
 module "monitoring" {
   source = "./modules/monitoring-alert-policy"
   display_name = "MOBILITY|${var.env_alert}|firestore|document_writes|warn|metric"
@@ -5,7 +13,7 @@ module "monitoring" {
   user_labels = {env = "${var.env}", purpose = "firestore_document_writes"}
   combiner = "OR"
   enabled = true
-  notification_channels = [ ]
+  notification_channels = [google_monitoring_notification_channel.name]
 
   conditions = {
     "Firestore Instance - Document Writes" = {
