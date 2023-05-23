@@ -1,4 +1,4 @@
-resource "google_monitoring_notification_channel" "basic" {
+resource "google_monitoring_notification_channel" "test_email" {
   display_name = "Test Notification Channel"
   type         = "email"
   labels = {
@@ -13,7 +13,7 @@ module "monitoring" {
   user_labels = {env = "${var.env}", purpose = "firestore_document_writes"}
   combiner = "OR"
   enabled = true
-  notification_channels = [google_monitoring_notification_channel.name]
+  notification_channels = [google_monitoring_notification_channel_test_email.name]
 
   conditions = {
     "Firestore Instance - Document Writes" = {
