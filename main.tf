@@ -1,8 +1,18 @@
-resource "google_monitoring_notification_channel" "email_channel" {
+resource "google_monitoring_notification_channel" "email" {
   display_name = "Email Channel"
   type         = "email"
   labels = {
     email_address = "alexandre.pitre22l@gmail.com"
+  }
+}
+
+resource "google_monitoring_notification_channel" "snow" {
+  display_name = "Webhook Channel"
+  type         = "webhook"
+  labels = {
+    url = "http://snow"
+    username = "user"
+    password = "passsword"
   }
 }
 
@@ -14,7 +24,8 @@ module "monitoring" {
   combiner = "OR"
   enabled = true
   notification_channels = [
-    google_monitoring_notification_channel.email_channel.name
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.email.snow
   ]
 
   conditions = {
