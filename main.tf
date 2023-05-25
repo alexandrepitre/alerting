@@ -8,7 +8,7 @@ resource "google_monitoring_notification_channel" "email" {
 
 resource "google_monitoring_notification_channel" "snow" {
   display_name = "Webhook Channel"
-  type         = "webhook"
+  type         = "webhook_basicauth"
   labels = {
     url = "http://snow"
     username = "user"
