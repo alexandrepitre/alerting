@@ -16,7 +16,7 @@ resource "google_monitoring_notification_channel" "snow" {
   }
 }
 
-module "monitoring" {
+module "mon-firestore-document-deletes" {
   source = "./modules/monitoring-alert-policy"
   display_name = "MOBILITY|${var.env_alert}|firestore|document_deletes|warn|metric"
   project_id = var.project_id
@@ -44,7 +44,7 @@ module "monitoring" {
  }
 }
 
-module "monitoring" {
+module "mon-firestore-document-writes" {
   source = "./modules/monitoring-alert-policy"
   display_name = "MOBILITY|${var.env_alert}|firestore|document_writes|warn|metric"
   project_id = var.project_id
