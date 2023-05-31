@@ -32,7 +32,7 @@ module "mon-firestore-document-deletes" {
     "Firestore Instance - Document Deletes" = {
     condition_absent = {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/document/delete_count\""
-      duration   = "60s"
+      duration   = "3600s"
       comparison = "COMPARISON_GT"
       aggregations_enabled = "true"
       aggregations_alignment_period = "300s"
