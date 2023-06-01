@@ -30,7 +30,7 @@ module "mon-firestore-document-deletes" {
 
   conditions = {
     "Firestore Instance - Document Deletes" = {
-    condition_treshold = {
+    condition_threshold = {
       filter     = "metric.type=\"firestore.googleapis.com/document/delete_count\" AND resource.type=\"firestore_instance\""
       duration   = "60s"
       comparison = "COMPARISON_GT"
