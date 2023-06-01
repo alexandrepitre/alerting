@@ -38,7 +38,6 @@ module "mon-firestore-document-deletes" {
       aggregations_enabled = "true"
       aggregations_alignment_period = "300s"
       aggregations_per_series_aligner = "ALIGN_MEAN"
-      aggregations_cross_series_reducer = "REDUCER_NONE"
       trigger_enabled = true
       trigger_count = 1
    }
