@@ -34,6 +34,36 @@ module "mon-firestore-document-deletes" {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/document/delete_count\""
       duration   = "3600s"
       comparison = "COMPARISON_GT"
+      threshold_value = "10"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-firestore-document-reads" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|firestore|document_reads|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "firestore_document_reads"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Firestore Instance - Document Reads" = {
+    condition_absent = {
+      filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/document/read_count\""
+      duration   = "3600s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "25"
       aggregations_enabled = "true"
       aggregations_alignment_period = "300s"
       aggregations_per_series_aligner = "ALIGN_MEAN"
@@ -62,6 +92,7 @@ module "mon-firestore-document-writes" {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/document/write_count\""
       duration   = "3600s"
       comparison = "COMPARISON_GT"
+      threshold_value = "25"
       aggregations_enabled = "true"
       aggregations_alignment_period = "300s"
       aggregations_per_series_aligner = "ALIGN_MEAN"
