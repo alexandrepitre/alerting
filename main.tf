@@ -116,9 +116,38 @@ module "mon-firestore-connected-clients" {
   ]
 
   conditions = {
-    "Firestore Instance - Document Writes" = {
+    "Firestore Instance - Connected Clients" = {
     condition_treshold = {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/network/active_connections\""
+      duration   = "3600s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-firestore-logs-error" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|firestore|logs_errors|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "firestore_logs_errors"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Firestore Instance - Logs-based metric errors" = {
+    condition_treshold = {
+      filter     = "resource.type = \"firestore_instance\" AND metric.type = \"logging.googleapis.com/logs_based_metrics_error_count\""
       duration   = "3600s"
       comparison = "COMPARISON_GT"
       threshold_value = "5"
