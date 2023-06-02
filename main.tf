@@ -218,3 +218,32 @@ module "mon-cloudfunction-logs-error" {
   }
  }
 }
+
+module "mon-cloudfunction-network-egress" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|cloudfunction|network_egress|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "cloudfunction_network_egress"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Cloud Function - Network Egress" = {
+    condition_threshold = {
+      filter     = "resource.type = \"cloud_function\" AND metric.type = \"cloudfunctions.googleapis.com/function/network_egress\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
