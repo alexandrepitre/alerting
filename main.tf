@@ -682,3 +682,61 @@ module "mon-firebase-logs-error" {
   }
  }
 }
+
+module "mon-firebase-hosting-logs-error" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|firebase|hosting|logs_error|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "firebase_hosting_logs_error"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Firebase Hosting Site Domain - Logs-based metric errors" = {
+    condition_threshold = {
+      filter     = "resource.type = \"firebase_domain\" AND metric.type = \"logging.googleapis.com/logs_based_metrics_error_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-firebase-hosting-bytes-sent" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|firebase|hosting|bytes_sent|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "firebase_hosting_bytes_sent"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Firebase Hosting Site Domain - Bytes sent" = {
+    condition_threshold = {
+      filter     = "resource.type = \"firebase_domain\" AND metric.type = \"firebasehosting.googleapis.com/network/sent_bytes_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
