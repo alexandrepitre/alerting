@@ -451,7 +451,7 @@ module "mon-loadbalancer-backend-request" {
  }
 }
 
-module "mon-loadbalancer-backend-request" {
+module "mon-loadbalancer-request" {
   source = "./modules/monitoring-alert-policy"
   display_name = "MOBILITY|${var.env_alert}|load_balancer|https_lb|request_count|warn|metric"
   project_id = var.project_id
@@ -466,7 +466,36 @@ module "mon-loadbalancer-backend-request" {
   conditions = {
     "HTTP/S Load Balancing - Request count" = {
     condition_threshold = {
-      filter     = "resource.type = \"https_lb_rule\" AND metric.type = \"loadbalancing.googleapis.com/https/backend_request_count\""
+      filter     = "resource.type = \"https_lb_rule\" AND metric.type = \"loadbalancing.googleapis.com/https/request_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-loadbalancer-total-lantency" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|load_balancer|https_lb|total_latency|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "loadbalancer_total_latency"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "HTTP/S Load Balancing -Total latency" = {
+    condition_threshold = {
+      filter     = "resource.type = \"https_lb_rule\" AND metric.type = \"loadbalancing.googleapis.com/https/total_latencies\""
       duration   = "0s"
       comparison = "COMPARISON_GT"
       threshold_value = "5"
