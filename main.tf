@@ -160,3 +160,32 @@ module "mon-firestore-logs-error" {
   }
  }
 }
+
+module "mon-cloudfunction-execution-count" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|cloudfunction|execution_count|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "cloudfunction_execution_count"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Firestore Instance - Cloud Function execution count" = {
+    condition_threshold = {
+      filter     = "resource.type = \"cloud_function\" AND metric.type = \"cloudfunctions.googleapis.com/function/execution_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
