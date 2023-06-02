@@ -292,7 +292,7 @@ module "mon-storage-object-count" {
   conditions = {
     "GCS Bucket - Object Count" = {
     condition_threshold = {
-      filter     = "resource.type = \"cloud_function\" AND metric.type = \"gcs_bucket\" AND metric.type = \"storage.googleapis.com/storage/object_count\""
+      filter     = "resource.type = \"gcs_bucket\" AND metric.type = \"storage.googleapis.com/storage/object_count\""
       duration   = "0s"
       comparison = "COMPARISON_GT"
       threshold_value = "5"
