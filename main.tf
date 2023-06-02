@@ -248,11 +248,11 @@ module "mon-cloudfunction-network-egress" {
  }
 }
 
-module "mon-gcsbucket-api-request-count" {
+module "mon-storage-request-count" {
   source = "./modules/monitoring-alert-policy"
-  display_name = "MOBILITY|${var.env_alert}|gcsbucket|api_request_count|warn|metric"
+  display_name = "MOBILITY|${var.env_alert}|storage|GCS|request_count|warn|metric"
   project_id = var.project_id
-  user_labels = {env = "${var.env}", purpose = "gcsbucket_api_request_count"}
+  user_labels = {env = "${var.env}", purpose = "storage_request_count"}
   combiner = "OR"
   enabled = true
   notification_channels = [
@@ -261,7 +261,7 @@ module "mon-gcsbucket-api-request-count" {
   ]
 
   conditions = {
-    "Storage Bucket - API Request Count" = {
+    "GCS Bucket - API Request Count" = {
     condition_threshold = {
       filter     = "resource.type = \"gcs_bucket\" AND metric.type = \"storage.googleapis.com/api/request_count\""
       duration   = "0s"
@@ -277,11 +277,11 @@ module "mon-gcsbucket-api-request-count" {
  }
 }
 
-module "mon-gcsbucket-object-count" {
+module "mon-storage-object-count" {
   source = "./modules/monitoring-alert-policy"
-  display_name = "MOBILITY|${var.env_alert}|gcsbucket|object_count|warn|metric"
+  display_name = "MOBILITY|${var.env_alert}|storage|GCS|object_count|warn|metric"
   project_id = var.project_id
-  user_labels = {env = "${var.env}", purpose = "gcsbucket_object_count"}
+  user_labels = {env = "${var.env}", purpose = "storage_object_count"}
   combiner = "OR"
   enabled = true
   notification_channels = [
@@ -290,7 +290,7 @@ module "mon-gcsbucket-object-count" {
   ]
 
   conditions = {
-    "Storage Bucket - Object Count" = {
+    "GCS Bucket - Object Count" = {
     condition_threshold = {
       filter     = "resource.type = \"cloud_function\" AND metric.type = \"gcs_bucket\" AND metric.type = \"storage.googleapis.com/storage/object_count\""
       duration   = "0s"
