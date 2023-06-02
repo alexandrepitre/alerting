@@ -45,7 +45,7 @@ module "mon-firestore-document-deletes" {
  }
 }
 
-/* module "mon-firestore-document-reads" {
+ module "mon-firestore-document-reads" {
   source = "./modules/monitoring-alert-policy"
   display_name = "MOBILITY|${var.env_alert}|firestore|document_reads|warn|metric"
   project_id = var.project_id
@@ -59,7 +59,7 @@ module "mon-firestore-document-deletes" {
 
   conditions = {
     "Firestore Instance - Document Reads" = {
-    condition_treshold = {
+    condition_threshold = {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/document/read_count\""
       duration   = "3600s"
       comparison = "COMPARISON_GT"
@@ -88,7 +88,7 @@ module "mon-firestore-document-writes" {
 
   conditions = {
     "Firestore Instance - Document Writes" = {
-    condition_treshold = {
+    condition_threshold = {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/document/write_count\""
       duration   = "3600s"
       comparison = "COMPARISON_GT"
@@ -117,7 +117,7 @@ module "mon-firestore-connected-clients" {
 
   conditions = {
     "Firestore Instance - Connected Clients" = {
-    condition_treshold = {
+    condition_threshold = {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"firestore.googleapis.com/network/active_connections\""
       duration   = "3600s"
       comparison = "COMPARISON_GT"
@@ -146,7 +146,7 @@ module "mon-firestore-logs-error" {
 
   conditions = {
     "Firestore Instance - Logs-based metric errors" = {
-    condition_treshold = {
+    condition_threshold = {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"logging.googleapis.com/logs_based_metrics_error_count\""
       duration   = "3600s"
       comparison = "COMPARISON_GT"
@@ -159,4 +159,4 @@ module "mon-firestore-logs-error" {
    }
   }
  }
-} */
+}
