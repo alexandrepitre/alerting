@@ -395,9 +395,9 @@ module "mon-storage-sent-bytes" {
 
 module "mon-loadbalancer-backend-latencies" {
   source = "./modules/monitoring-alert-policy"
-  display_name = "MOBILITY|${var.env_alert}load_balancer|https_lb||warn|metric"
+  display_name = "MOBILITY|${var.env_alert}|load_balancer|https_lb||warn|metric"
   project_id = var.project_id
-  user_labels = {env = "${var.env}", purpose = "loadbalancer_backend_lantecies"}
+  user_labels = {env = "${var.env}", purpose = "loadbalancer_backend_lantencies"}
   combiner = "OR"
   enabled = true
   notification_channels = [
@@ -415,6 +415,64 @@ module "mon-loadbalancer-backend-latencies" {
       aggregations_enabled = "true"
       aggregations_alignment_period = "300s"
       aggregations_per_series_aligner = "ALIGN_PERCENTILE_99"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-loadbalancer-backend-request" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|load_balancer|https_lb|request_count|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "loadbalancer_request_count"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "HTTP/S Load Balancing - Request count" = {
+    condition_threshold = {
+      filter     = "resource.type = \"https_lb_rule\" AND metric.type = \"loadbalancing.googleapis.com/https/backend_request_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-loadbalancer-backend-request" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|load_balancer|https_lb|request_count|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "loadbalancer_request_count"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "HTTP/S Load Balancing - Request count" = {
+    condition_threshold = {
+      filter     = "resource.type = \"https_lb_rule\" AND metric.type = \"loadbalancing.googleapis.com/https/backend_request_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
       trigger_enabled = true
       trigger_count = 1
    }
