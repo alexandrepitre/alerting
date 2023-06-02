@@ -522,7 +522,7 @@ module "mon-loadbalancer-logs-error" {
   ]
 
   conditions = {
-    "HTTP/S Load Balancing -Logs-based metric errors" = {
+    "HTTP/S Load Balancing - Logs-based metric errors" = {
     condition_threshold = {
       filter     = "resource.type = \"https_lb_rule\" AND metric.type = \"logging.googleapis.com/logs_based_metrics_error_count\""
       duration   = "0s"
@@ -641,6 +641,35 @@ module "mon-firebase-verdict-count" {
     "Firebase App Check Instance - Verdict count" = {
     condition_threshold = {
       filter     = "resource.type = \"edgecache.googleapis.com/EdgeCacheRouteRule\" AND metric.type = \"edgecache.googleapis.com/edge_cache_route_rule/request_count_by_blocked\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-firebase-logs-error" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|firebase|logs_error|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "firebase_logs_error"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Firebase App Check Instance - Logs-based metric errors" = {
+    condition_threshold = {
+      filter     = "resource.type = \"firebaseappcheck.googleapis.com/Instance\" AND metric.type = \"logging.googleapis.com/logs_based_metrics_error_count\""
       duration   = "0s"
       comparison = "COMPARISON_GT"
       threshold_value = "5"
