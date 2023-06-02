@@ -247,3 +247,62 @@ module "mon-cloudfunction-network-egress" {
   }
  }
 }
+
+module "mon-gcsbucket-api-request-count" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|gcsbucket|api_request_count|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "gcsbucket_api_request_count"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Storage Bucket - API Request Count" = {
+    condition_threshold = {
+      filter     = "resource.type = \"gcs_bucket\" AND metric.type = \"storage.googleapis.com/api/request_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-gcsbucket-object-count" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|gcsbucket|object_count|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "gcsbucket_object_count"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Storage Bucket - Object Count" = {
+    condition_threshold = {
+      filter     = "resource.type = \"cloud_function\" AND metric.type = \"gcs_bucket\" AND metric.type = \"storage.googleapis.com/storage/object_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
