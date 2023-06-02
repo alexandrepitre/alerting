@@ -335,3 +335,60 @@ module "mon-storage-total-bytes" {
  }
 }
 
+module "mon-storage-received-bytes" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|storage|GCS|received_bytes|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "storage_received_bytes"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "GCS Bucket - Received bytes" = {
+    condition_threshold = {
+      filter     = "resource.type = \"gcs_bucket\" AND metric.type = \"storage.googleapis.com/network/received_bytes_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-storage-sent-bytes" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|storage|GCS|sent_bytes|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "storage_sent_bytes"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "GCS Bucket - Sent bytes" = {
+    condition_threshold = {
+      filter     = "resource.type = \"gcs_bucket\" AND metric.type = \"storage.googleapis.com/network/sent_bytes_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
