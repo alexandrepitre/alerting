@@ -596,3 +596,31 @@ module "mon-vpc-bytes-sent" {
  }
 }
 
+module "mon-cloudarmor-request-count" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|cloudarmor|request_count|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "cloudarmor_request_count"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Cloud Armor - Request count" = {
+    condition_threshold = {
+      filter     = "resource.type = \"edgecache.googleapis.com/EdgeCacheRouteRule\" AND metric.type = \"edgecache.googleapis.com/edge_cache_route_rule/request_count_by_blocked\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
