@@ -134,9 +134,9 @@ module "mon-firestore-connected-clients" {
 
 module "mon-firestore-logs-error" {
   source = "./modules/monitoring-alert-policy"
-  display_name = "MOBILITY|${var.env_alert}|firestore|logs_errors|warn|metric"
+  display_name = "MOBILITY|${var.env_alert}|firestore|logs_error|warn|metric"
   project_id = var.project_id
-  user_labels = {env = "${var.env}", purpose = "firestore_logs_errors"}
+  user_labels = {env = "${var.env}", purpose = "firestore_logs_error"}
   combiner = "OR"
   enabled = true
   notification_channels = [
@@ -145,7 +145,7 @@ module "mon-firestore-logs-error" {
   ]
 
   conditions = {
-    "Firestore Instance - Logs-based metric errors" = {
+    "Firestore Instance - Logs-based metric error" = {
     condition_threshold = {
       filter     = "resource.type = \"firestore_instance\" AND metric.type = \"logging.googleapis.com/logs_based_metrics_error_count\""
       duration   = "3600s"
@@ -174,9 +174,38 @@ module "mon-cloudfunction-execution-count" {
   ]
 
   conditions = {
-    "Firestore Instance - Cloud Function execution count" = {
+    "Cloud Function - Execution count" = {
     condition_threshold = {
       filter     = "resource.type = \"cloud_function\" AND metric.type = \"cloudfunctions.googleapis.com/function/execution_count\""
+      duration   = "0s"
+      comparison = "COMPARISON_GT"
+      threshold_value = "5"
+      aggregations_enabled = "true"
+      aggregations_alignment_period = "300s"
+      aggregations_per_series_aligner = "ALIGN_MEAN"
+      trigger_enabled = true
+      trigger_count = 1
+   }
+  }
+ }
+}
+
+module "mon-cloudfunction-logs-error" {
+  source = "./modules/monitoring-alert-policy"
+  display_name = "MOBILITY|${var.env_alert}|cloudfunction|logs_error|warn|metric"
+  project_id = var.project_id
+  user_labels = {env = "${var.env}", purpose = "cloudfunction_logs_error"}
+  combiner = "OR"
+  enabled = true
+  notification_channels = [
+    google_monitoring_notification_channel.email.name,
+    google_monitoring_notification_channel.snow.name
+  ]
+
+  conditions = {
+    "Cloud Function - Logs-based metric error" = {
+    condition_threshold = {
+      filter     = "resource.type = \"cloud_function\" AND metric.type = \"logging.googleapis.com/logs_based_metrics_error_count\""
       duration   = "0s"
       comparison = "COMPARISON_GT"
       threshold_value = "5"
