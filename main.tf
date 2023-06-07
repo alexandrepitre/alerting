@@ -2,7 +2,7 @@ resource "google_monitoring_notification_channel" "email" {
   display_name = "Email Channel"
   type         = "email"
   labels = {
-    email_address = "alexandre.pitre22l@cn.ca, sami.islam@cn.ca, lehel.joseph@cn.ca"
+    email_address = ["alexandre.pitre@cn.ca, sami.islam@cn.ca, lehel.joseph@cn.ca"]
   }
 }
 
